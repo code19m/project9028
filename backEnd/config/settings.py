@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     'drf_spectacular',
 
     'apps.users.apps.UsersConfig',
+    'apps.warehouse.apps.WarehouseConfig',
+    'apps.sales.apps.SalesConfig',
+    'apps.finance.apps.FinanceConfig',
 ]
 
 MIDDLEWARE = [
@@ -130,4 +133,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-APPEND_SLASH = False
+APPEND_SLASH = True

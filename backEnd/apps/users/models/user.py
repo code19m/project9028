@@ -4,8 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 
 from apps.users.managers.user import CustomUserManager
-from apps.utils.mixins import ModelMixin
-from apps.utils.validators import phone_regex
+from utils.validators import phone_regex
 
 
 def get_default_role():
@@ -31,7 +30,7 @@ class ChoiceArrayField(ArrayField):
         return super(ArrayField, self).formfield(**defaults)
 
 
-class User(ModelMixin, AbstractUser):
+class User(AbstractUser):
 
     class Roles(models.TextChoices):
         DIRECTOR = "director"
@@ -55,6 +54,10 @@ class User(ModelMixin, AbstractUser):
         models.CharField(max_length=12, choices=Roles.choices),
         default=get_default_role
     )
+    current_role = models.CharField(max_length=12, choices=Roles.choices, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = CustomUserManager()
 

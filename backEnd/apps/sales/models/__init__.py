@@ -1,0 +1,1 @@
+from apps.sales.models.client import Client

@@ -18,7 +18,8 @@ class CurrentUserSerializer(serializers.ModelSerializer):
             "last_name",
             "image",
             "phone_number",
-            "roles"
+            "current_role",
+            "roles",
         )
         read_only_fields = ("username", "roles")
 
