@@ -5,6 +5,7 @@ services:
     build:
       context: ./backEnd
     restart: always
+    tty: true
     volumes:
       - ./backEnd/:/backEnd/
     command: python manage.py runserver 0.0.0.0:8000

@@ -9,3 +9,5 @@ class Client(models.Model):
         max_length=15, blank=True, validators=(phone_regex,)
     )
     address = models.TextField(blank=True)
+
+    is_deleted = models.BooleanField(default=False)

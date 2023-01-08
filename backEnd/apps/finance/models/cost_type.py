@@ -10,3 +10,5 @@ class CostType(models.Model):
 
     choice = models.CharField(max_length=20, choices=Choices.choices, default=Choices.OTHER)
     title = models.CharField(max_length=30)
+
+    is_deleted = models.BooleanField(default=False)
