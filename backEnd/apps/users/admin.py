@@ -10,10 +10,10 @@ class MyUserAdmin(UserAdmin):
     """Customized User Admin"""
 
     fieldsets = (
-        (None, {"fields": ("username",)}),
+        (None, {"fields": ("username", "email")}),
         (_("Personal info"), {
             "fields": (
-                "first_name", "last_name", "email", "image", "phone_number", "roles"
+                "first_name", "last_name", "image", "phone_number", "roles"
             )
         }),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
