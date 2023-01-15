@@ -20,8 +20,17 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         if len(user.roles) > 1 and current_role is None:
             raise serializers.ValidationError(
                 {
-                    "keys": "current_role",
+                    "keys": "current_role_is_not_selected",
                     "roles": user.roles
+                },
+                code=status.HTTP_400_BAD_REQUEST
+            )
+        if current_role not in user.roles:
+            raise serializers.ValidationError(
+                {
+                    "keys": "incorrect_current_role",
+                    "roles": user.roles,
+                    "error": f"this user is not {current_role}",
                 },
                 code=status.HTTP_400_BAD_REQUEST
             )
