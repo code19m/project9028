@@ -8,6 +8,6 @@ prod_logs:
 	docker compose -f docker-compose.prod.yml logs -f $(name)
 
 prod_exec:
-	docker compose -f docker-compose.prod.yml -it exec $(name)
+	docker compose -f docker-compose.prod.yml exec -it $(name) bash
 
 .PHONY: 'prod_run prod_down prod_logs prod_exec'
