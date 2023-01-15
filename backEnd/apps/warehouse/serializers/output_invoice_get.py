@@ -1,18 +1,18 @@
 from rest_framework import serializers
 
-from apps.warehouse.serializers.supplier import SupplierSerializer
-from apps.warehouse.models import InputInvoice
+from apps.sales.serializers.client import ClientSerializer
+from apps.warehouse.models import OutputInvoice
 
 
-class InputInvoiceGetSerializer(serializers.ModelSerializer):
-    supplier = SupplierSerializer()
+class OutputInvoiceGetSerializer(serializers.ModelSerializer):
+    client = ClientSerializer()
     total_sum = serializers.DecimalField(max_digits=20, decimal_places=2, allow_null=False)
 
     class Meta:
-        model = InputInvoice
+        model = OutputInvoice
         fields = (
             "id",
-            "supplier",
+            "client",
             "status",
             "total_sum",
             # "paid_sum",

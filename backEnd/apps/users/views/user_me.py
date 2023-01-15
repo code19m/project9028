@@ -21,7 +21,7 @@ class CurrentUserSerializer(serializers.ModelSerializer):
             "current_role",
             "roles",
         )
-        read_only_fields = ("username", "roles")
+        read_only_fields = ("username", "roles", "current_role")
 
 
 class CurrentUserGetUpdateView(

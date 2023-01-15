@@ -4,7 +4,7 @@ from apps.warehouse.models.product import Product
 
 
 class ProductAddSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Product
         fields = (

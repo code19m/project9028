@@ -39,7 +39,7 @@ class User(AbstractUser):
         FINANCIER = "financier"
         DEFAULT = "default"
 
-    email = models.EmailField(unique=True, null=True, blank=True)
+    email = models.EmailField(unique=True, null=True)
 
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)

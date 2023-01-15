@@ -20,3 +20,17 @@ class ProductGetSerializer(serializers.ModelSerializer):
             "description",
             "added_time",
         )
+
+
+class ProductNestedSerializer(serializers.ModelSerializer):
+    """
+        Nested serializer for invoice items
+    """
+
+    class Meta:
+        model = Product
+        fields = (
+            "id",
+            "title",
+            "code",
+        )
