@@ -10,13 +10,22 @@ class MyUserAdmin(UserAdmin):
     """Customized User Admin"""
 
     fieldsets = (
-        (None, {"fields": ("username", "email")}),
+        (None, {"fields": ("username",)}),
         (_("Personal info"), {
             "fields": (
-                "first_name", "last_name", "image", "phone_number", "roles"
+                "first_name", "last_name", "email", "image", "phone_number", "roles"
             )
         }),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+    )
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("username", "email", "password1", "password2"),
+            },
+        ),
     )
     readonly_fields = ("last_login", "date_joined")
     list_display = ("username", "email", "first_name", "last_name", "roles")
