@@ -4,14 +4,14 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 
-from apps.warehouse.models import OutputInvoice
-from apps.warehouse.serializers.output_invoice_add import OutputInvoiceAddSerializer
-from apps.warehouse.serializers.output_invoice_get import OutputInvoiceGetSerializer
-from apps.warehouse.serializers.output_invoice_update import OutputInvoiceUpdateSerializer
+from apps.warehouse.models import ReturnedInvoice
+from apps.warehouse.serializers.returned_invoice_add import ReturnedInvoiceAddSerializer
+from apps.warehouse.serializers.returned_invoice_get import ReturnedInvoiceGetSerializer
+from apps.warehouse.serializers.returned_invoice_update import ReturnedInvoiceUpdateSerializer
 from utils.permissions import IsWarehouseman, IsAuthenticatedAndReadOnly
 
 
-class OutputInvoiceListAddView(GenericAPIView):
+class ReturnedInvoiceListAddView(GenericAPIView):
     permission_classes = (IsWarehouseman | IsAuthenticatedAndReadOnly,)
 
     def post(self, request):
@@ -27,9 +27,9 @@ class OutputInvoiceListAddView(GenericAPIView):
         return self.get_paginated_response(serializer.data)
 
     def get_queryset(self):
-        return OutputInvoice.objects.annotate(
+        return ReturnedInvoice.objects.annotate(
             total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
-            paid_sum=Sum(F("incomes__amount"), default=0),
+            paid_sum=Sum(F("expenses__amount"), default=0),
         ).select_related(
             "client"
         )
@@ -37,12 +37,12 @@ class OutputInvoiceListAddView(GenericAPIView):
     def get_serializer_class(self):
         match self.request.method:
             case "POST":
-                return OutputInvoiceAddSerializer
+                return ReturnedInvoiceAddSerializer
             case "GET":
-                return OutputInvoiceGetSerializer
+                return ReturnedInvoiceGetSerializer
 
 
-class OutputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
+class ReturnedInvoiceRetrieveUpdateDestroyView(GenericAPIView):
     permission_classes = (IsWarehouseman | IsAuthenticatedAndReadOnly,)
 
     def get(self, request, pk):
@@ -59,7 +59,7 @@ class OutputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
 
     def delete(self, request, pk):
         instance = self.get_object()
-        if instance.status == OutputInvoice.Statuses.CONFIRMED:
+        if instance.status == ReturnedInvoice.Statuses.CONFIRMED:
             raise ValidationError(
                 {
                     "keys": "invoice_is_confirmed",
@@ -70,9 +70,9 @@ class OutputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_queryset(self):
-        return OutputInvoice.objects.annotate(
+        return ReturnedInvoice.objects.annotate(
             total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
-            paid_sum=Sum(F("incomes__amount"), default=0),
+            paid_sum=Sum(F("expenses__amount"), default=0),
         ).select_related(
             "client"
         )
@@ -80,6 +80,6 @@ class OutputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
     def get_serializer_class(self):
         match self.request.method:
             case "GET":
-                return OutputInvoiceGetSerializer
+                return ReturnedInvoiceGetSerializer
             case "PUT":
-                return OutputInvoiceUpdateSerializer
+                return ReturnedInvoiceUpdateSerializer

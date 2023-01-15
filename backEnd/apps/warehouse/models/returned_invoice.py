@@ -15,5 +15,3 @@ class ReturnedInvoice(models.Model):
     description = models.TextField(blank=True)
 
     added_time = models.DateTimeField(auto_now_add=True)
-
-    is_deleted = models.BooleanField(default=False)

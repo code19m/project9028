@@ -6,8 +6,13 @@ from apps.warehouse.models.returned_invoice import ReturnedInvoice
 
 
 class Expense(models.Model):
-    cost_type = models.ForeignKey(CostType, on_delete=models.CASCADE)
-    input_invoice = models.ForeignKey(InputInvoice, on_delete=models.CASCADE, db_index=True, null=True)
-    returned_invoice = models.ForeignKey(ReturnedInvoice, on_delete=models.CASCADE, db_index=True, null=True)
+    cost_type = models.ForeignKey(CostType, on_delete=models.CASCADE, null=True, blank=True)
+    invoice = models.ForeignKey(
+        InputInvoice, on_delete=models.CASCADE, db_index=True, null=True, related_name="expenses"
+    )
+    returned_invoice = models.ForeignKey(
+        ReturnedInvoice, on_delete=models.CASCADE, db_index=True, null=True, related_name="expenses"
+    )
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
 
-    is_deleted = models.BooleanField(default=False)
+    added_time = models.DateTimeField(auto_now_add=True)

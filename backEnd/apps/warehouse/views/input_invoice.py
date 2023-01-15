@@ -28,7 +28,8 @@ class InputInvoiceListAddView(GenericAPIView):
 
     def get_queryset(self):
         return InputInvoice.objects.annotate(
-            total_sum=Sum(F("items__quantity") * F("items__price")),
+            total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
+            paid_sum=Sum(F("expenses__amount"), default=0),
         ).select_related(
             "supplier"
         )
@@ -70,7 +71,8 @@ class InputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
 
     def get_queryset(self):
         return InputInvoice.objects.annotate(
-            total_sum=Sum(F("items__quantity") * F("items__price")),
+            total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
+            paid_sum=Sum(F("expenses__amount"), default=0),
         ).select_related(
             "supplier"
         )

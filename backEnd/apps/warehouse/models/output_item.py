@@ -11,4 +11,4 @@ class OutputInvoiceItem(models.Model):
     )
 
     quantity = models.DecimalField(max_digits=5, decimal_places=1)
-    price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)

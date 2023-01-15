@@ -1,18 +1,18 @@
-from django.db.models import Sum, F
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 
-from apps.warehouse.models import OutputInvoice
-from apps.warehouse.serializers.output_invoice_add import OutputInvoiceAddSerializer
-from apps.warehouse.serializers.output_invoice_get import OutputInvoiceGetSerializer
-from apps.warehouse.serializers.output_invoice_update import OutputInvoiceUpdateSerializer
+from apps.warehouse.models import ReturnedInvoice, ReturnedInvoiceItem
+from apps.warehouse.serializers.returned_item_add import ReturnedInvoiceItemAddSerializer
+from apps.warehouse.serializers.returned_item_get import ReturnedInvoiceItemGetSerializer
+from apps.warehouse.serializers.returned_item_update import ReturnedInvoiceItemUpdateSerializer
 from utils.permissions import IsWarehouseman, IsAuthenticatedAndReadOnly
 
 
-class OutputInvoiceListAddView(GenericAPIView):
+class ReturnedInvoiceItemListAddView(GenericAPIView):
     permission_classes = (IsWarehouseman | IsAuthenticatedAndReadOnly,)
+    filterset_fields = ("product", "invoice")
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -27,28 +27,20 @@ class OutputInvoiceListAddView(GenericAPIView):
         return self.get_paginated_response(serializer.data)
 
     def get_queryset(self):
-        return OutputInvoice.objects.annotate(
-            total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
-            paid_sum=Sum(F("incomes__amount"), default=0),
-        ).select_related(
-            "client"
-        )
+        return ReturnedInvoiceItem.objects.select_related("product")
 
     def get_serializer_class(self):
         match self.request.method:
             case "POST":
-                return OutputInvoiceAddSerializer
+                return ReturnedInvoiceItemAddSerializer
             case "GET":
-                return OutputInvoiceGetSerializer
+                return ReturnedInvoiceItemGetSerializer
 
 
-class OutputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
+class ReturnedInvoiceItemUpdateDestroyView(GenericAPIView):
+    queryset = ReturnedInvoiceItem.objects.all()
     permission_classes = (IsWarehouseman | IsAuthenticatedAndReadOnly,)
-
-    def get(self, request, pk):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+    serializer_class = ReturnedInvoiceItemUpdateSerializer
 
     def put(self, request, pk):
         instance = self.get_object()
@@ -59,27 +51,12 @@ class OutputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
 
     def delete(self, request, pk):
         instance = self.get_object()
-        if instance.status == OutputInvoice.Statuses.CONFIRMED:
+        if instance.status == ReturnedInvoice.Statuses.CONFIRMED:
             raise ValidationError(
                 {
                     "keys": "invoice_is_confirmed",
-                    "error": "cannot delele confirmed invoice"
+                    "error": "cannot delele item of confirmed invoice"
                 }
             )
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def get_queryset(self):
-        return OutputInvoice.objects.annotate(
-            total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
-            paid_sum=Sum(F("incomes__amount"), default=0),
-        ).select_related(
-            "client"
-        )
-
-    def get_serializer_class(self):
-        match self.request.method:
-            case "GET":
-                return OutputInvoiceGetSerializer
-            case "PUT":
-                return OutputInvoiceUpdateSerializer
