@@ -10,7 +10,7 @@ class InputInvoice(models.Model):
         CONFIRMED = "confirmed"
 
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, db_index=True)
-    
+
     status = models.CharField(max_length=10, choices=Statuses.choices, default=Statuses.NEW)
     description = models.TextField(blank=True)
 

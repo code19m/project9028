@@ -5,7 +5,7 @@ from apps.warehouse.models.group import Group
 
 
 class Product(models.Model):
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=255)
     code = models.CharField(max_length=4)
     current_arrival_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     current_selling_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
