@@ -4,6 +4,7 @@ services:
   server:
     build:
       context: ./backEnd
+    restart: always
     env_file:
       - ./backEnd/.env
     expose:
@@ -16,6 +17,7 @@ services:
 
   db:
     image: postgres:13-alpine
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
@@ -24,6 +26,7 @@ services:
       - "5432"
 
   nginx:
+    restart: always
     build: ./nginx
     ports:
       - 80:80
