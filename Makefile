@@ -12,7 +12,7 @@ logs:
 	docker compose logs -f $(name)
 
 exec:
-	docker compose exec -it $(name) sh
+	docker compose exec -it $(name) bash
 
 prod_run:
 	docker compose -f docker-compose.prod.yml up -d --build

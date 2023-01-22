@@ -1,3 +1,4 @@
+from apps.warehouse.models.brand import Brand
 from apps.warehouse.models.group import Group
 
 from apps.warehouse.models.input_invoice import InputInvoice

@@ -11,11 +11,12 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "code",
-            "shelf_life",
-            "current_price",
-            "product_type",
+            "current_arrival_price",
+            "current_selling_price",
             "group",
-            "description"
+            "brand",
+            "image",
+            "description",
         )
 
     def validate_title(self, value):

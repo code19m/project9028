@@ -9,6 +9,7 @@ from apps.warehouse.views.input_item import (
     InputInvoiceItemListAddView,
     InputInvoiceItemUpdateDestroyView,
 )
+from apps.warehouse.views.brand import BrandViewSet
 from apps.warehouse.views.group import GroupViewSet
 from apps.warehouse.views.output_invoice import (
     OutputInvoiceListAddView,
@@ -34,6 +35,7 @@ from apps.warehouse.views.supplier import SupplierViewSet
 
 
 router = DefaultRouter()
+router.register("brand", BrandViewSet)
 router.register("group", GroupViewSet)
 router.register("supplier", SupplierViewSet)
 

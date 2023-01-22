@@ -11,7 +11,7 @@ from utils.permissions import IsWarehouseman, IsAuthenticatedAndReadOnly
 
 class ProductListAddView(GenericAPIView):
     permission_classes = (IsWarehouseman | IsAuthenticatedAndReadOnly,)
-    filterset_fields = ("group", "product_type",)
+    filterset_fields = ("group", "brand",)
     search_fields = ("title", "code",)
 
     def post(self, request):
@@ -27,7 +27,7 @@ class ProductListAddView(GenericAPIView):
         return self.get_paginated_response(serializer.data)
 
     def get_queryset(self):
-        return Product.objects.filter(is_deleted=False).select_related("group")
+        return Product.objects.filter(is_deleted=False).select_related("group", "brand")
 
     def get_serializer_class(self):
         match self.request.method:
