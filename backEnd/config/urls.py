@@ -15,6 +15,7 @@ urlpatterns = [
     path('api/warehouse/', include('apps.warehouse.urls')),
     path('api/sales/', include('apps.sales.urls')),
     path('api/finance/', include('apps.finance.urls')),
+    path('api/dashboard/', include('apps.dashboard.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

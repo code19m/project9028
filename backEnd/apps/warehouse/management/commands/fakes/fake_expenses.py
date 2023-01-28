@@ -35,21 +35,21 @@ expenses = [
         "cost_type_id": None,
         "invoice_id": 1,
         "returned_invoice_id": None,
-        "amount": 0, # TODO: calculate from invoice
+        "amount": 7434.95,
         "description": "Full payment for invoice 1"
     },
     {
         "cost_type_id": None,
         "invoice_id": 2,
         "returned_invoice_id": None,
-        "amount": 0, # TODO: calculate from invoice
+        "amount": 53185.93,
         "description": "Half payment for invoice 2"
     },
     {
         "cost_type_id": None,
         "invoice_id": None,
         "returned_invoice_id": 1,
-        "amount": 0, # TODO: calculate from returned invoice
+        "amount": 699.00,
         "description": "Full payment for invoice 1"
     },
 ]

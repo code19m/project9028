@@ -5,7 +5,9 @@ from apps.warehouse.models.output_invoice import OutputInvoice
 
 
 class OutputInvoiceItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, db_index=True)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, db_index=True, related_name="output_items"
+    )
     invoice = models.ForeignKey(
         OutputInvoice, on_delete=models.CASCADE, db_index=True, related_name="items"
     )

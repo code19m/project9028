@@ -5,22 +5,22 @@ incomes = [
     },
     {
         "income_type": "from_sales",
-        "amount": 0, # Todo: calculate amount from invoice
+        "amount": 2149.91,
         "invoice_id": 1
     },
     {
         "income_type": "from_sales",
-        "amount": 0, # Todo: calculate amount from invoice
+        "amount": 500,
         "invoice_id": 1
     },
     {
         "income_type": "from_sales",
-        "amount": 0, # Todo: calculate amount from invoice
+        "amount": 5000,
         "invoice_id": 2
     },
     {
         "income_type": "from_sales",
-        "amount": 0, # Todo: calculate amount from invoice
+        "amount": 5000,
         "invoice_id": 2
     }
 ]

@@ -9,7 +9,9 @@ class OutputInvoice(models.Model):
         NEW = "new"
         CONFIRMED = "confirmed"
 
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, db_index=True)
+    client = models.ForeignKey(
+        Client, on_delete=models.CASCADE, db_index=True, related_name="invoices"
+    )
 
     status = models.CharField(max_length=10, choices=Statuses.choices, default=Statuses.NEW)
     description = models.TextField(blank=True)

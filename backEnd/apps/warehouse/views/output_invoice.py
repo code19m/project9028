@@ -37,7 +37,7 @@ class OutputInvoiceListAddView(GenericAPIView):
             ),
         ).select_related(
             "client"
-        )
+        ).order_by("-id")
 
     def get_serializer_class(self):
         match self.request.method:
@@ -84,7 +84,7 @@ class OutputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
             ),
         ).select_related(
             "client"
-        )
+        ).order_by("-id")
 
     def get_serializer_class(self):
         match self.request.method:
