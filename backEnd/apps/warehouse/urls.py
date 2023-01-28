@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from apps.warehouse.views.input_invoice import (
     InputInvoiceListAddView,
     InputInvoiceRetrieveUpdateDestroyView,
+    InputInvoiceConfirmView,
 )
 from apps.warehouse.views.input_item import (
     InputInvoiceItemListAddView,
@@ -14,6 +15,7 @@ from apps.warehouse.views.group import GroupViewSet
 from apps.warehouse.views.output_invoice import (
     OutputInvoiceListAddView,
     OutputInvoiceRetrieveUpdateDestroyView,
+    OutputInvoiceConfirmView,
 )
 from apps.warehouse.views.output_item import (
     OutputInvoiceItemListAddView,
@@ -46,12 +48,14 @@ urlpatterns = [
 
     path("input-invoice/", InputInvoiceListAddView.as_view()),
     path("input-invoice/<int:pk>/", InputInvoiceRetrieveUpdateDestroyView.as_view()),
+    path("input-invoice/<int:pk>/confirm/", InputInvoiceConfirmView.as_view()),
 
     path("input-invoice-item/", InputInvoiceItemListAddView.as_view()),
     path("input-invoice-item/<int:pk>/", InputInvoiceItemUpdateDestroyView.as_view()),
 
     path("output-invoice/", OutputInvoiceListAddView.as_view()),
     path("output-invoice/<int:pk>/", OutputInvoiceRetrieveUpdateDestroyView.as_view()),
+    path("output-invoice/<int:pk>/confirm/", OutputInvoiceConfirmView.as_view()),
 
     path("output-invoice-item/", OutputInvoiceItemListAddView.as_view()),
     path("output-invoice-item/<int:pk>/", OutputInvoiceItemUpdateDestroyView.as_view()),

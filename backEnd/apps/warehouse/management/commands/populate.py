@@ -2,10 +2,31 @@ from django.core.files.images import ImageFile
 from django.core.management import BaseCommand
 from django.db import transaction
 
+from apps.finance.models import Income, Expense, CostType
 from apps.sales.models import Client
 from apps.users.models import User
-from apps.warehouse.models import Brand, Group, Product, Supplier
+from apps.warehouse.models import (
+    Brand, Group, Product, Supplier,
+    InputInvoice, InputInvoiceItem,
+    OutputInvoice, OutputInvoiceItem,
+    ReturnedInvoice, ReturnedInvoiceItem,
+)
 from apps.warehouse.management.commands.fakes.fake_clients import clients
+from apps.warehouse.management.commands.fakes.fake_expenses import (
+    cost_types,
+    expenses
+)
+from apps.warehouse.management.commands.fakes.fake_invoices import (
+    input_invoices,
+    output_invoices,
+    returned_invoices
+)
+from apps.warehouse.management.commands.fakes.fake_invoice_items import (
+    input_invoice_items,
+    output_invoice_items,
+    returned_invoice_items
+)
+from apps.warehouse.management.commands.fakes.fake_incomes import incomes
 from apps.warehouse.management.commands.fakes.fake_products import (
     groups,
     brands,
@@ -49,5 +70,40 @@ class Command(BaseCommand):
             with open(image_path, "rb") as file:
                 pr.image = ImageFile(file, image_name)
                 pr.save()
+
+        for input_invoice in input_invoices:
+            InputInvoice.objects.create(**input_invoice)
+
+        for input_item in input_invoice_items:
+            InputInvoiceItem.objects.create(**input_item)
+
+        for output_invoice in output_invoices:
+            OutputInvoice.objects.create(**output_invoice)
+
+        for output_item in output_invoice_items:
+            OutputInvoiceItem.objects.create(**output_item)
+
+        for returned_invoice in returned_invoices:
+            ReturnedInvoice.objects.create(**returned_invoice)
+
+        for returned_item in returned_invoice_items:
+            ReturnedInvoiceItem.objects.create(**returned_item)
+
+        for cost_type in cost_types:
+            CostType.objects.create(**cost_type)
+
+        for expense in expenses:
+            Expense.objects.create(**expense)
+
+        for income in incomes:
+            Income.objects.create(**income)
+
+        confirmed_input_invoices = InputInvoice.objects.filter(status=InputInvoice.Statuses.CONFIRMED)
+        for invoice in confirmed_input_invoices:
+            invoice.update_products_quantity()
+
+        confirmed_output_invoices = OutputInvoice.objects.filter(status=OutputInvoice.Statuses.CONFIRMED)
+        for invoice in confirmed_output_invoices:
+            invoice.update_products_quantity()
 
         print("DB populated successfully!!!")

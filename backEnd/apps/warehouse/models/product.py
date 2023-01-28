@@ -11,6 +11,7 @@ class Product(models.Model):
     current_selling_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, db_index=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, db_index=True)
+    quantity = models.IntegerField(default=0)
     description = models.TextField(blank=True)
 
     image = models.ImageField(upload_to='product_images/%y/%m/%d',

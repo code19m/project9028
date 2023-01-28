@@ -27,7 +27,8 @@ class ProductListAddView(GenericAPIView):
         return self.get_paginated_response(serializer.data)
 
     def get_queryset(self):
-        return Product.objects.filter(is_deleted=False).select_related("group", "brand")
+        return Product.objects.filter(is_deleted=False).select_related("group", "brand") \
+            .order_by("-quantity")
 
     def get_serializer_class(self):
         match self.request.method:

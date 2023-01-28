@@ -1,4 +1,5 @@
-from django.db.models import Sum, F
+from django.db import transaction
+from django.db.models import Sum, F, Subquery, OuterRef
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -29,7 +30,11 @@ class OutputInvoiceListAddView(GenericAPIView):
     def get_queryset(self):
         return OutputInvoice.objects.annotate(
             total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
-            paid_sum=Sum(F("incomes__amount"), default=0),
+            paid_sum=Subquery(
+                OutputInvoice.objects.filter(id=OuterRef("id")) \
+                    .annotate(paid_sum=Sum("incomes__amount", default=0)) \
+                    .values("paid_sum")[:1]
+            ),
         ).select_related(
             "client"
         )
@@ -72,7 +77,11 @@ class OutputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
     def get_queryset(self):
         return OutputInvoice.objects.annotate(
             total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
-            paid_sum=Sum(F("incomes__amount"), default=0),
+            paid_sum=Subquery(
+                OutputInvoice.objects.filter(id=OuterRef("id")) \
+                    .annotate(paid_sum=Sum("incomes__amount", default=0)) \
+                    .values("paid_sum")[:1]
+            ),
         ).select_related(
             "client"
         )
@@ -83,3 +92,17 @@ class OutputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
                 return OutputInvoiceGetSerializer
             case "PUT":
                 return OutputInvoiceUpdateSerializer
+
+
+class OutputInvoiceConfirmView(GenericAPIView):
+    permission_classes = (IsWarehouseman | IsAuthenticatedAndReadOnly,)
+
+    @transaction.atomic
+    def post(self, request, pk):
+        invoice = self.get_object()
+        invoice.set_confirmed_status()
+        invoice.update_products_quantity()
+        return Response(status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        return OutputInvoice.objects.filter(status=OutputInvoice.Statuses.NEW)

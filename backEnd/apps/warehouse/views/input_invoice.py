@@ -1,10 +1,12 @@
-from django.db.models import Sum, F
+from django.db import transaction
+from django.db.models import Sum, F, Subquery, OuterRef
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 
 from apps.warehouse.models import InputInvoice
+from apps.finance.models import Expense
 from apps.warehouse.serializers.input_invoice_add import InputInvoiceAddSerializer
 from apps.warehouse.serializers.input_invoice_get import InputInvoiceGetSerializer
 from apps.warehouse.serializers.input_invoice_update import InputInvoiceUpdateSerializer
@@ -29,10 +31,14 @@ class InputInvoiceListAddView(GenericAPIView):
     def get_queryset(self):
         return InputInvoice.objects.annotate(
             total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
-            paid_sum=Sum(F("expenses__amount"), default=0),
+            paid_sum=Subquery(
+                InputInvoice.objects.filter(id=OuterRef("id")) \
+                    .annotate(paid_sum=Sum("expenses__amount", default=0)) \
+                    .values("paid_sum")[:1]
+            )
         ).select_related(
             "supplier"
-        )
+        ).order_by("-id")
 
     def get_serializer_class(self):
         match self.request.method:
@@ -72,10 +78,14 @@ class InputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
     def get_queryset(self):
         return InputInvoice.objects.annotate(
             total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
-            paid_sum=Sum(F("expenses__amount"), default=0),
+            paid_sum=Subquery(
+                InputInvoice.objects.filter(id=OuterRef("id")) \
+                    .annotate(paid_sum=Sum("expenses__amount", default=0)) \
+                    .values("paid_sum")[:1]
+            )
         ).select_related(
             "supplier"
-        )
+        ).order_by("-id")
 
     def get_serializer_class(self):
         match self.request.method:
@@ -83,3 +93,17 @@ class InputInvoiceRetrieveUpdateDestroyView(GenericAPIView):
                 return InputInvoiceGetSerializer
             case "PUT":
                 return InputInvoiceUpdateSerializer
+
+
+class InputInvoiceConfirmView(GenericAPIView):
+    permission_classes = (IsWarehouseman | IsAuthenticatedAndReadOnly,)
+
+    @transaction.atomic
+    def post(self, request, pk):
+        invoice = self.get_object()
+        invoice.set_confirmed_status()
+        invoice.update_products_quantity()
+        return Response(status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        return InputInvoice.objects.filter(status=InputInvoice.Statuses.NEW)

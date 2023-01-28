@@ -1,4 +1,4 @@
-from django.db.models import Sum, F
+from django.db.models import Sum, F, Subquery, OuterRef
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -29,10 +29,14 @@ class ReturnedInvoiceListAddView(GenericAPIView):
     def get_queryset(self):
         return ReturnedInvoice.objects.annotate(
             total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
-            paid_sum=Sum(F("expenses__amount"), default=0),
+            paid_sum=Subquery(
+                ReturnedInvoice.objects.filter(id=OuterRef("id")) \
+                    .annotate(paid_sum=Sum("expenses__amount", default=0)) \
+                    .values("paid_sum")[:1]
+            ),
         ).select_related(
             "client"
-        )
+        ).order_by("-id")
 
     def get_serializer_class(self):
         match self.request.method:
@@ -72,10 +76,14 @@ class ReturnedInvoiceRetrieveUpdateDestroyView(GenericAPIView):
     def get_queryset(self):
         return ReturnedInvoice.objects.annotate(
             total_sum=Sum(F("items__quantity") * F("items__price"), default=0),
-            paid_sum=Sum(F("expenses__amount"), default=0),
+            paid_sum=Subquery(
+                ReturnedInvoice.objects.filter(id=OuterRef("id")) \
+                    .annotate(paid_sum=Sum("expenses__amount", default=0)) \
+                    .values("paid_sum")[:1]
+            ),
         ).select_related(
             "client"
-        )
+        ).order_by("-id")
 
     def get_serializer_class(self):
         match self.request.method:

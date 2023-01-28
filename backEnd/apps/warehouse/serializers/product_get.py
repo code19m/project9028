@@ -19,9 +19,9 @@ class ProductGetSerializer(serializers.ModelSerializer):
             "current_selling_price",
             "brand",
             "group",
+            "quantity",
             "image",
             "description",
-            "added_time",
         )
 
 

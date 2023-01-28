@@ -10,9 +10,8 @@ class InputInvoiceUpdateSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "description",
-            "status",
         )
-    
+
     def validate(self, attrs):
         instance = self.instance
         if instance.status == InputInvoice.Statuses.CONFIRMED:
