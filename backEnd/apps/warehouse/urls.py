@@ -63,7 +63,7 @@ urlpatterns = [
 
     path("returned-invoice/", ReturnedInvoiceListAddView.as_view()),
     path("returned-invoice/<int:pk>/", ReturnedInvoiceRetrieveUpdateDestroyView.as_view()),
-    path("returned-invoice/confirm/", ReturnedInvoiceConfirmView.as_view()),
+    path("returned-invoice/<int:pk>/confirm/", ReturnedInvoiceConfirmView.as_view()),
 
     path("returned-invoice-item/", ReturnedInvoiceItemListAddView.as_view()),
     path("returned-invoice-item/<int:pk>/", ReturnedInvoiceItemUpdateDestroyView.as_view()),
