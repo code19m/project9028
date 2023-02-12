@@ -51,7 +51,7 @@ class InputInvoiceItemUpdateDestroyView(GenericAPIView):
 
     def delete(self, request, pk):
         instance = self.get_object()
-        if instance.status == InputInvoice.Statuses.CONFIRMED:
+        if instance.invoice.status == InputInvoice.Statuses.CONFIRMED:
             raise ValidationError(
                 {
                     "keys": "invoice_is_confirmed",
