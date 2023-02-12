@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import Sum, F, Subquery, OuterRef
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -91,3 +92,16 @@ class ReturnedInvoiceRetrieveUpdateDestroyView(GenericAPIView):
                 return ReturnedInvoiceGetSerializer
             case "PUT":
                 return ReturnedInvoiceUpdateSerializer
+
+
+class ReturnedInvoiceConfirmView(GenericAPIView):
+    permission_classes = (IsWarehouseman | IsAuthenticatedAndReadOnly,)
+
+    @transaction.atomic
+    def post(self, request, pk):
+        invoice = self.get_object()
+        invoice.set_confirmed_status()
+        return Response(status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        return ReturnedInvoice.objects.filter(status=ReturnedInvoice.Statuses.NEW)

@@ -2,7 +2,7 @@ from django.core.files.images import ImageFile
 from django.core.management import BaseCommand
 from django.db import transaction
 
-from apps.finance.models import Income, Expense, CostType
+from apps.finance.models import Income, Expense
 from apps.sales.models import Client
 from apps.users.models import User
 from apps.warehouse.models import (
@@ -12,10 +12,7 @@ from apps.warehouse.models import (
     ReturnedInvoice, ReturnedInvoiceItem,
 )
 from apps.warehouse.management.commands.fakes.fake_clients import clients
-from apps.warehouse.management.commands.fakes.fake_expenses import (
-    cost_types,
-    expenses
-)
+from apps.warehouse.management.commands.fakes.fake_expenses import expenses
 from apps.warehouse.management.commands.fakes.fake_invoices import (
     input_invoices,
     output_invoices,
@@ -88,9 +85,6 @@ class Command(BaseCommand):
 
         for returned_item in returned_invoice_items:
             ReturnedInvoiceItem.objects.create(**returned_item)
-
-        for cost_type in cost_types:
-            CostType.objects.create(**cost_type)
 
         for expense in expenses:
             Expense.objects.create(**expense)

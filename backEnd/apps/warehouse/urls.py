@@ -28,6 +28,7 @@ from apps.warehouse.views.product import (
 from apps.warehouse.views.returned_invoice import (
     ReturnedInvoiceListAddView,
     ReturnedInvoiceRetrieveUpdateDestroyView,
+    ReturnedInvoiceConfirmView,
 )
 from apps.warehouse.views.returned_item import (
     ReturnedInvoiceItemListAddView,
@@ -39,7 +40,7 @@ from apps.warehouse.views.supplier import SupplierViewSet
 router = DefaultRouter()
 router.register("brand", BrandViewSet)
 router.register("group", GroupViewSet)
-router.register("supplier", SupplierViewSet)
+router.register("supplier", SupplierViewSet, basename="suppliers")
 
 urlpatterns = [
     path("", include(router.urls)),
@@ -62,6 +63,7 @@ urlpatterns = [
 
     path("returned-invoice/", ReturnedInvoiceListAddView.as_view()),
     path("returned-invoice/<int:pk>/", ReturnedInvoiceRetrieveUpdateDestroyView.as_view()),
+    path("returned-invoice/confirm/", ReturnedInvoiceConfirmView.as_view()),
 
     path("returned-invoice-item/", ReturnedInvoiceItemListAddView.as_view()),
     path("returned-invoice-item/<int:pk>/", ReturnedInvoiceItemUpdateDestroyView.as_view()),

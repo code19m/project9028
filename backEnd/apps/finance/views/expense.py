@@ -9,9 +9,9 @@ from utils.permissions import IsFinancier, IsAuthenticatedAndReadOnly
 
 
 class ExpenseListAddView(GenericAPIView):
-    queryset = Expense.objects.all()
+    queryset = Expense.objects.all().order_by('-added_time')
     permission_classes = (IsFinancier | IsAuthenticatedAndReadOnly,)
-    filterset_fields = ("cost_type__title",)
+    filterset_fields = ("description",)
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)

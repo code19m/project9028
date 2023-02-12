@@ -6,6 +6,7 @@ from apps.dashboard.views.top_products import TopProductsView
 from apps.dashboard.views.top_clients import TopClientsView
 from apps.dashboard.views.supplier_credits import SupplierCreditsView
 from apps.dashboard.views.client_debts import ClientDebtsView
+from apps.dashboard.views.goal import GoalCreateListView, GoalRetrieveUpdateView
 
 
 urlpatterns = [
@@ -15,4 +16,6 @@ urlpatterns = [
     path("top-clients/", TopClientsView.as_view()),
     path("supplier-credits/", SupplierCreditsView.as_view()),
     path("client-debts/", ClientDebtsView.as_view()),
+    path("goal/", GoalCreateListView.as_view()),
+    path("goal/<int:pk>/", GoalRetrieveUpdateView.as_view()),
 ]

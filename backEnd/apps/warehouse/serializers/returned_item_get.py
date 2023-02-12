@@ -10,6 +10,7 @@ class ReturnedInvoiceItemGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReturnedInvoiceItem
         fields = (
+            "id",
             "product",
             "invoice",
             "quantity",

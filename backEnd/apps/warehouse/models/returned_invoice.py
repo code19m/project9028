@@ -15,3 +15,7 @@ class ReturnedInvoice(models.Model):
     description = models.TextField(blank=True)
 
     added_time = models.DateTimeField(auto_now_add=True)
+
+    def set_confirmed_status(self):
+        self.status = self.Statuses.CONFIRMED
+        self.save()
