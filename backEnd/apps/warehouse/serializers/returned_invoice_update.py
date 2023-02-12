@@ -10,7 +10,6 @@ class ReturnedInvoiceUpdateSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "description",
-            "status",
         )
 
     def validate(self, attrs):
