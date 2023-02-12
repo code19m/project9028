@@ -2,12 +2,12 @@ from django.db.models import Sum, F
 from rest_framework.viewsets import ModelViewSet
 
 from apps.warehouse.models import Supplier
-from apps.warehouse.serializers.supplier import SupplierListSerializer
+from apps.warehouse.serializers.supplier import SupplierSerializer, SupplierListSerializer
 from utils.permissions import IsWarehouseman, IsAuthenticatedAndReadOnly
 
 
 class SupplierViewSet(ModelViewSet):
-    serializer_class = SupplierListSerializer
+    serializer_class = SupplierSerializer
     permission_classes = (IsWarehouseman | IsAuthenticatedAndReadOnly,)
     search_fields = ("title",)
 
@@ -23,3 +23,10 @@ class SupplierViewSet(ModelViewSet):
             ) - Sum(F("invoices__expenses__amount"), default=0)
         )
         return queryset
+
+    def get_serializer_class(self):
+        match self.request.method:
+            case "POST", "PUT":
+                return SupplierSerializer
+            case _:
+                return SupplierSerializer
