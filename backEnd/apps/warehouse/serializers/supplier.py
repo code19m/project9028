@@ -14,7 +14,7 @@ class SupplierSerializer(serializers.ModelSerializer):
         )
 
 
-class SupplierListSerializer(serializers.ModelSerializer):
+class SupplierGetSerializer(serializers.ModelSerializer):
     credit = serializers.DecimalField(max_digits=20, decimal_places=2, allow_null=False)
 
     class Meta:

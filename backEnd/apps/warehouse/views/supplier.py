@@ -2,7 +2,7 @@ from django.db.models import Sum, F
 from rest_framework.viewsets import ModelViewSet
 
 from apps.warehouse.models import Supplier
-from apps.warehouse.serializers.supplier import SupplierSerializer, SupplierListSerializer
+from apps.warehouse.serializers.supplier import SupplierSerializer, SupplierGetSerializer
 from utils.permissions import IsWarehouseman, IsAuthenticatedAndReadOnly
 
 
@@ -29,4 +29,4 @@ class SupplierViewSet(ModelViewSet):
             case "POST", "PUT":
                 return SupplierSerializer
             case _:
-                return SupplierSerializer
+                return SupplierGetSerializer
