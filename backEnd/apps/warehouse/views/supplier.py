@@ -2,12 +2,12 @@ from django.db.models import Sum, F
 from rest_framework.viewsets import ModelViewSet
 
 from apps.warehouse.models import Supplier
-from apps.warehouse.serializers.supplier import SupplierSerializer
+from apps.warehouse.serializers.supplier import SupplierListSerializer
 from utils.permissions import IsWarehouseman, IsAuthenticatedAndReadOnly
 
 
 class SupplierViewSet(ModelViewSet):
-    serializer_class = SupplierSerializer
+    serializer_class = SupplierListSerializer
     permission_classes = (IsWarehouseman | IsAuthenticatedAndReadOnly,)
     search_fields = ("title",)
 
