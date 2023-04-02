@@ -30,6 +30,8 @@ services:
     build: ./nginx
     ports:
       - 80:80
+    volumes:
+      - ./frontEnd/dist:/home/app/
     depends_on:
       - server
 
