@@ -25,3 +25,4 @@ class SupplierGetSerializer(serializers.ModelSerializer):
             "credit",
             "address",
         )
+        read_only_fields = ("credit",)

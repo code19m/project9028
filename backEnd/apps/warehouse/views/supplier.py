@@ -1,5 +1,7 @@
 from django.db.models import Sum, F
+from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.response import Response
 
 from apps.warehouse.models import Supplier
 from apps.warehouse.serializers.supplier import SupplierSerializer, SupplierGetSerializer
@@ -15,6 +17,13 @@ class SupplierViewSet(ModelViewSet):
         instance.is_deleted = True
         instance.save()
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def get_queryset(self):
         queryset = Supplier.objects.filter(is_deleted=False).annotate(
             credit=Sum(
@@ -22,11 +31,13 @@ class SupplierViewSet(ModelViewSet):
                 default=0
             ) - Sum(F("invoices__expenses__amount"), default=0)
         )
-        return queryset
+        return queryset.order_by("id")
 
     def get_serializer_class(self):
         match self.request.method:
-            case "POST", "PUT":
+            case "POST":
+                return SupplierSerializer
+            case "PUT":
                 return SupplierSerializer
             case _:
                 return SupplierGetSerializer
